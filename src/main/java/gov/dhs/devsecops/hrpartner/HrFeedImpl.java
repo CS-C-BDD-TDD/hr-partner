@@ -32,6 +32,9 @@ public class HrFeedImpl implements HrFeedAPI {
 	@Autowired
 	private HrRunner hrRunner;
 
+	@Autowired
+	private Receiver receiver;
+
 	@Override
 	@ApiOperation(value = "", nickname = "hrPostStixDoc", notes = "", response = String.class, tags = {})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class) })
@@ -56,5 +59,23 @@ public class HrFeedImpl implements HrFeedAPI {
 
 		logger.info("Returning ...");
 		return ResponseEntity.status(HttpStatus.OK_200).headers(responseHeaders).body("YOOHOO!");
+	}
+
+	@ApiOperation(value = "", nickname = "hrGetStixDoc", notes = "", response = String.class, tags = {})
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class) })
+	@RequestMapping(value = "/humanreview/stixdoc", produces = { "text/plain" }, consumes = {
+			"application/json" }, method = RequestMethod.GET)
+	public ResponseEntity<String> hrGetStixDoc(@RequestHeader HttpHeaders headers) {
+		String jsonDoc = receiver.getJsonDoc();
+		if (jsonDoc == null) {
+			jsonDoc = "*** NO DATA ****";
+		}
+		logger.info("Returning ... '" + jsonDoc + "'");
+		HttpHeaders responseHeaders = new HttpHeaders();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		responseHeaders.add("Content-type", "text/plain");
+		return ResponseEntity.status(HttpStatus.OK_200).headers(responseHeaders).body(jsonDoc);
+
 	}
 }

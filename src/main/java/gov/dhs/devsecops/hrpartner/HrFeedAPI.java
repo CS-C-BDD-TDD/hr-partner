@@ -30,4 +30,12 @@ public interface HrFeedAPI {
 
 	}
 
+	@ApiOperation(value = "", nickname = "hrGetStixDoc", notes = "", response = String.class, tags = {})
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class) })
+	@RequestMapping(value = "/humanreview/stixdoc", produces = { "text/plain" }, consumes = {
+			"application/json" }, method = RequestMethod.GET)
+	default ResponseEntity<String> hrGetStixDoc(@RequestHeader HttpHeaders headers) {
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
 }
