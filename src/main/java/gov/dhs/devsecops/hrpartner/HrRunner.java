@@ -18,6 +18,10 @@ public class HrRunner implements CommandLineRunner {
 	@Autowired
 	JmsTemplate jmsTemplate;
 
+	public void setJmsTemplate(JmsTemplate jmsTemplate) {
+		this.jmsTemplate = jmsTemplate;
+	}
+
 	public void send(String message) {
 		logger.info("Sending to Ingest ... " + message);
 		jmsTemplate.convertAndSend("inbound.stix", message);

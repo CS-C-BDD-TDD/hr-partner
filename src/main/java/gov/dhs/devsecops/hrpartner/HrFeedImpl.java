@@ -33,6 +33,14 @@ public class HrFeedImpl implements HrFeedAPI {
 	@Autowired
 	private Receiver receiver;
 
+	public void setHrRunner(HrRunner hrRunner) {
+		this.hrRunner = hrRunner;
+	}
+
+	public void setReceiver(Receiver receiver) {
+		this.receiver = receiver;
+	}
+
 	@Override
 	@ApiOperation(value = "", nickname = "hrPostStixDoc", notes = "", response = String.class, tags = {})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class) })
