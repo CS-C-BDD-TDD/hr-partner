@@ -1,13 +1,11 @@
 package gov.dhs.devsecops.hrpartner;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 import javax.validation.Valid;
 
 import org.eclipse.jetty.http.HttpStatus;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,38 +42,40 @@ public class HrFeedImpl implements HrFeedAPI {
 			@ApiParam(value = "Post Stix Doc", required = true) @Valid @RequestBody String stixDoc) {
 		logger.info("GOT DATA ..." + stixDoc);
 
-		logger.info("Replacing guid with new UUID");
-		StringBuilder sb = new StringBuilder(stixDoc);
-		int index = sb.indexOf("\"id\"");
-		int beg = sb.indexOf("--", index) + 2;
-		int end = sb.indexOf("\"", beg);
-		sb.replace(beg, end, UUID.randomUUID().toString());
-		hrRunner.send(sb.toString());
+		JSONObject jsonDoc = new JSONObject(stixDoc);
+		String newId = String.format("%s--%s", jsonDoc.get("type").toString(), UUID.randomUUID().toString());
+
+		logger.info("oldId: " + jsonDoc.getString("id"));
+		logger.info("newId: " + newId);
+
+		jsonDoc.put("id", newId);
+		hrRunner.send(jsonDoc.toString(2));
 
 		HttpHeaders responseHeaders = new HttpHeaders();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date = new Date();
 		responseHeaders.add("Content-type", "text/plain");
 
 		logger.info("Returning ...");
-		return ResponseEntity.status(HttpStatus.OK_200).headers(responseHeaders).body("YOOHOO!");
+		String returnMessage = newId;
+		return ResponseEntity.status(HttpStatus.OK_200).headers(responseHeaders).body(returnMessage);
 	}
 
 	@ApiOperation(value = "", nickname = "hrGetStixDoc", notes = "", response = String.class, tags = {})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class) })
-	@RequestMapping(value = "/humanreview/stixdoc", produces = { "text/plain" }, consumes = {
-			"application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/humanreview/stixdoc", produces = { "text/plain" }, method = RequestMethod.GET)
 	public ResponseEntity<String> hrGetStixDoc(@RequestHeader HttpHeaders headers) {
-		String jsonDoc = receiver.getJsonDoc();
-		if (jsonDoc == null) {
-			jsonDoc = "*** NO DATA ****";
-		}
-		logger.info("Returning ... '" + jsonDoc + "'");
-		HttpHeaders responseHeaders = new HttpHeaders();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date = new Date();
-		responseHeaders.add("Content-type", "text/plain");
-		return ResponseEntity.status(HttpStatus.OK_200).headers(responseHeaders).body(jsonDoc);
+		String stixDoc = receiver.getJsonDoc();
 
+		if (stixDoc == null) {
+			stixDoc = "*** NO DATA ****";
+		} else {
+			JSONObject jsonDoc = new JSONObject(stixDoc);
+			stixDoc = jsonDoc.toString(2);
+		}
+
+		logger.info("Returning ... '" + stixDoc + "'");
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add("Content-type", "text/plain");
+		return ResponseEntity.status(HttpStatus.OK_200).headers(responseHeaders).body(stixDoc);
 	}
 }
