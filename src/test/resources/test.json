@@ -4,8 +4,8 @@
 	"objects": [
 		{
 			"id": "threat-actor--dfaa8d77-07e2-4e28-b2c8-92e9f7b04428",
-			"name": "Disco Team Threat Actor Group",
-			"type": "!!!###HUMAN REVIEW###!!!threat-actor",
+			"name": "!!!###HUMAN REVIEW###!!!Disco Team Threat Actor Group",
+			"type": "threat-actor",
 			"goals": [
 				"Steal Credit Card information"
 			],
@@ -23,7 +23,7 @@
 			"description": "!!!###HUMAN REVIEW###!!!This organized threat actor group operates to create profit from all types of crime.",
 			"resource_level": "organization",
 			"sophistication": "expert",
-			"primary_motivation": "personal-gain"
+			"primary_motivation": "!!!###HUMAN REVIEW###!!!personal-gain"
 		},
 		{
 			"id": "identity--733c5838-34d9-4fbf-949c-62aba761184c",
