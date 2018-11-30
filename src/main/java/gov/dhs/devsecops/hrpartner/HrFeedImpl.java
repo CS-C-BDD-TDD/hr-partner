@@ -28,10 +28,10 @@ public class HrFeedImpl implements HrFeedAPI {
 	private static final Logger logger = LoggerFactory.getLogger(HrFeedImpl.class);
 
 	@Autowired
-	private HrRunner hrRunner;
+	private TopicSender hrRunner;
 
 	@Autowired
-	private Receiver receiver;
+	private TopicReceiver receiver;
 
 	@Override
 	@ApiOperation(value = "", nickname = "hrPostStixDoc", notes = "", response = String.class, tags = {})

@@ -1,5 +1,6 @@
 package gov.dhs.devsecops.hrpartner;
 
+import org.apache.activemq.command.ActiveMQTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,9 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HrRunner implements CommandLineRunner {
-	private Logger logger = LoggerFactory.getLogger(HrRunner.class);
+public class TopicSender implements CommandLineRunner {
+	private static final String INBOUND_TOPIC = "inbound.topic";
+	private Logger logger = LoggerFactory.getLogger(TopicSender.class);
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -20,6 +22,6 @@ public class HrRunner implements CommandLineRunner {
 
 	public void send(String message) {
 		logger.info("Sending to Ingest ... " + message);
-		jmsTemplate.convertAndSend("inbound.stix", message);
+		jmsTemplate.convertAndSend(new ActiveMQTopic(INBOUND_TOPIC), message);
 	}
 }
