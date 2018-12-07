@@ -25,7 +25,7 @@ pipeline {
                       script {
                          def pom = readMavenPom file: 'pom.xml'
                          version = pom.version
-                         withSonarQubeEnv('sonar') {
+                         {
                            try {
                              sh 'mvn install'
                            } catch (error) {
