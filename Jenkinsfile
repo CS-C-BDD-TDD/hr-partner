@@ -16,6 +16,10 @@ pipeline {
     environment {
         PROJECT_NAME = 'hr-partner'
         KUBERNETES_NAMESPACE = "${ciProject}"
+        MQ_BROKER_TCP = "humanreview-amq-tcp"
+        MQ_PORT_TCP = "61616"
+		MQ_PASSWORD = "Mprd2bnAMrcan!"
+		MQ_USERNAME = "user"
     }
     stages {
         stage('Build, Quality, And Security') {

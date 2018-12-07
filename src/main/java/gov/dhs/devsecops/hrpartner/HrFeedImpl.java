@@ -40,11 +40,11 @@ public class HrFeedImpl implements HrFeedAPI {
 			"application/json" }, method = RequestMethod.POST)
 	public ResponseEntity<String> hrPostStixDoc(@RequestHeader HttpHeaders headers,
 			@ApiParam(value = "Post Stix Doc", required = true) @Valid @RequestBody String stixDoc) {
+		dumpEnv();
 		logger.info("GOT DATA ..." + stixDoc);
 
 		JSONObject jsonDoc = new JSONObject(stixDoc);
-		String newId = String.format("%s--%s", jsonDoc.get("type").toString(),
-				UUID.randomUUID().toString());
+		String newId = String.format("%s--%s", jsonDoc.get("type").toString(), UUID.randomUUID().toString());
 		logger.info("oldId: " + jsonDoc.getString("id"));
 		logger.info("newId: " + newId);
 		jsonDoc.put("id", newId);
@@ -55,14 +55,18 @@ public class HrFeedImpl implements HrFeedAPI {
 		responseHeaders.add("Content-type", "text/plain");
 
 		String returnMessage = newId;
-		return ResponseEntity.status(HttpStatus.OK_200).headers(responseHeaders)
-				.body(returnMessage);
+		return ResponseEntity.status(HttpStatus.OK_200).headers(responseHeaders).body(returnMessage);
+	}
+
+	private void dumpEnv() {
+		logger.info("active mq url: {}", System.getProperty("spring.activemq.broker-url"));
+		logger.info("active mq user: {}", System.getProperty("spring.activemq.user"));
+		logger.info("active mq password: {}", System.getProperty("spring.activemq.password"));
 	}
 
 	@ApiOperation(value = "", nickname = "hrGetStixDoc", notes = "", response = String.class, tags = {})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class) })
-	@RequestMapping(value = "/humanreview/stixdoc", produces = {
-			"text/plain" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/humanreview/stixdoc", produces = { "text/plain" }, method = RequestMethod.GET)
 	public ResponseEntity<String> hrGetStixDoc(@RequestHeader HttpHeaders headers) {
 		String stixDoc = receiver.getJsonDoc();
 		if (stixDoc == null) {
