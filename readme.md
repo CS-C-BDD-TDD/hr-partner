@@ -1,4 +1,8 @@
 
+
+```
+./mvnw -Ddocker.image.prefix=drtran clean install dockerfile:build
+./mvnw -Ddocker.image.prefix=drtran clean install dockerfile:push
 oc new-app --name hr-partner -e PROFILE=dev -e MQ_BROKER_TCP=humanreview-amq-tcp -e MQ_PORT_TCP=61616 -e MQ_USERNAME=user -e MQ_PASSWORD="Mprd2bnAMrcan!" drtran/hr-partner:latest
 
 172.30.48.50
@@ -38,3 +42,5 @@ humanreview-amq-tcp
   515  oc get all -o name | grep hr-partner
   516  oc delete dc hr-parnter
 </pre>
+
+```
